@@ -45,11 +45,10 @@
             android:textColor="#020202"
             android:textSize="34sp"
             android:textStyle="bold"
-            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintBottom_toBottomOf="@id/start_stop"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.400" />
+            app:layout_constraintTop_toTopOf="parent" />
 
         <Button
             android:id="@+id/start_stop"
