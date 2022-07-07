@@ -1,86 +1,73 @@
-package com.example.cooltimer;
+package com.example.cooltimer
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatActivity
+import android.os.CountDownTimer
+import android.os.Bundle
+import com.example.cooltimer.MainActivity
+import android.widget.SeekBar.OnSeekBarChangeListener
+import android.widget.SeekBar
+import android.media.MediaPlayer
+import android.view.View
+import com.example.cooltimer.R
+import com.example.cooltimer.databinding.ActivityMainBinding
 
-import android.media.MediaPlayer;
-import android.os.Bundle;
-import android.os.CountDownTimer;
-import android.widget.SeekBar;
+class MainActivity : AppCompatActivity() {
+    private var binding: ActivityMainBinding? = null
+    private var countDownTimer: CountDownTimer? = null
+    private var state: State? = null
 
-import com.example.cooltimer.databinding.ActivityMainBinding;
-
-public class MainActivity extends AppCompatActivity {
-
-    private final static String STATE_KEY = "State";
-
-    private ActivityMainBinding binding;
-    private CountDownTimer countDownTimer;
-    private State state;
-
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        binding = ActivityMainBinding.inflate(getLayoutInflater());
-        setContentView(binding.getRoot());
-
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        binding = ActivityMainBinding.inflate(layoutInflater)
+        setContentView(binding!!.root)
         if (savedInstanceState != null) {
-            this.state = savedInstanceState.getParcelable(STATE_KEY);
+            state = savedInstanceState.getParcelable(STATE_KEY)
         } else {
-            this.state = new State();
+            state = State()
         }
-
-        binding.seekBar.setMax(900);
-        binding.seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
-            @Override
-            public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
-                state.setProgress(i);
-                binding.timer.setText(String.valueOf(state.getProgress()));
+        binding!!.seekBar.max = 900
+        binding!!.seekBar.setOnSeekBarChangeListener(object : OnSeekBarChangeListener {
+            override fun onProgressChanged(seekBar: SeekBar, i: Int, b: Boolean) {
+                state!!.progress = i
+                binding!!.timer.text = state!!.progress.toString()
                 // TODO we create new thread every time we call onCreate() Activity LC. Expensive
-                start(state.getProgress());
+                start(state!!.progress)
             }
 
-            @Override
-            public void onStartTrackingTouch(SeekBar seekBar) {
-
-            }
-
-            @Override
-            public void onStopTrackingTouch(SeekBar seekBar) {
-
-            }
-        });
-
-        binding.startStop.setOnClickListener(view -> {
-            state.setStarted(!state.isStarted());
-            binding.seekBar.setEnabled(!state.isStarted());
-            binding.startStop.setText(state.isStarted()? "Stop" : "Start");
-            if (state.isStarted()) {
-                countDownTimer.start();
+            override fun onStartTrackingTouch(seekBar: SeekBar) {}
+            override fun onStopTrackingTouch(seekBar: SeekBar) {}
+        })
+        binding!!.startStop.setOnClickListener { view: View? ->
+            state!!.isStarted = !state!!.isStarted
+            binding!!.seekBar.isEnabled = !state!!.isStarted
+            binding!!.startStop.text = if (state!!.isStarted) "Stop" else "Start"
+            if (state!!.isStarted) {
+                countDownTimer!!.start()
             } else {
-                countDownTimer.cancel();
+                countDownTimer!!.cancel()
             }
-        });
+        }
     }
 
-    public void start(int progress) {
-        countDownTimer = new CountDownTimer(progress * 1000L, 1000) {
-            @Override
-            public void onTick(long l) {
-                state.setSecondsRemains((int) l/1000);
-                binding.timer.setText(String.valueOf(state.getSecondsRemains()));
+    fun start(progress: Int) {
+        countDownTimer = object : CountDownTimer(progress * 1000L, 1000) {
+            override fun onTick(l: Long) {
+                state!!.secondsRemains = l.toInt() / 1000
+                binding!!.timer.text = state!!.secondsRemains.toString()
             }
 
-            @Override
-            public void onFinish() {
-                MediaPlayer.create(getApplicationContext(), R.raw.bell_sound).start();
+            override fun onFinish() {
+                MediaPlayer.create(applicationContext, R.raw.bell_sound).start()
             }
-        };
+        }
     }
 
-    @Override
-    protected void onSaveInstanceState(@NonNull Bundle outState) {
-        super.onSaveInstanceState(outState);
-        outState.putParcelable(STATE_KEY, this.state);
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        outState.putParcelable(STATE_KEY, state)
+    }
+
+    companion object {
+        private const val STATE_KEY = "State"
     }
 }

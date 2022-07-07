@@ -1,67 +1,40 @@
-package com.example.cooltimer;
+package com.example.cooltimer
 
-import android.os.Parcel;
-import android.os.Parcelable;
+import android.os.Parcelable
+import android.os.Parcel
 
-public class State implements Parcelable {
+class State : Parcelable {
+    var isStarted = false
+    var progress = 0
+    var secondsRemains = 0
 
-    private boolean isStarted;
-    private int progress;
-    private int secondsRemains;
-
-    public State() {}
-
-    public void setStarted(boolean started) {
-        isStarted = started;
+    constructor() {}
+    protected constructor(`in`: Parcel) {
+        isStarted = `in`.readByte().toInt() != 0
+        progress = `in`.readInt()
+        secondsRemains = `in`.readInt()
     }
 
-    public void setProgress(int progress) {
-        this.progress = progress;
+    override fun describeContents(): Int {
+        return 0
     }
 
-    public void setSecondsRemains(int secondsRemains) {
-        this.secondsRemains = secondsRemains;
+    override fun writeToParcel(parcel: Parcel, i: Int) {
+        parcel.writeByte((if (isStarted) 1 else 0).toByte())
+        parcel.writeInt(progress)
+        parcel.writeInt(secondsRemains)
     }
 
-    public boolean isStarted() {
-        return isStarted;
-    }
+    companion object {
+        @JvmField
+        val CREATOR: Parcelable.Creator<State?> = object : Parcelable.Creator<State?> {
+            override fun createFromParcel(`in`: Parcel): State? {
+                return State(`in`)
+            }
 
-    public int getProgress() {
-        return progress;
-    }
-
-    public int getSecondsRemains() {
-        return secondsRemains;
-    }
-
-    protected State(Parcel in) {
-        isStarted = in.readByte() != 0;
-        progress = in.readInt();
-        secondsRemains = in.readInt();
-    }
-
-    public static final Creator<State> CREATOR = new Creator<State>() {
-        @Override
-        public State createFromParcel(Parcel in) {
-            return new State(in);
+            override fun newArray(size: Int): Array<State?> {
+                return arrayOfNulls(size)
+            }
         }
-
-        @Override
-        public State[] newArray(int size) {
-            return new State[size];
-        }
-    };
-
-    @Override
-    public int describeContents() {
-        return 0;
-    }
-
-    @Override
-    public void writeToParcel(Parcel parcel, int i) {
-        parcel.writeByte((byte) (isStarted ? 1 : 0));
-        parcel.writeInt(progress);
-        parcel.writeInt(secondsRemains);
     }
 }
