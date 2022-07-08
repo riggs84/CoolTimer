@@ -2,7 +2,6 @@ package com.example.cooltimer
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
 import android.widget.SeekBar.OnSeekBarChangeListener
 import android.widget.SeekBar
 import androidx.activity.viewModels
@@ -19,7 +18,7 @@ class MainActivity : AppCompatActivity() {
         setContentView(binding!!.root)
 
         if (stateViewModel.state.value == null) {
-            stateViewModel.initState(State(false, 0, 0, false))
+            stateViewModel.initState(State(false, 0, false))
         }
 
         binding!!.seekBar.max = 900
@@ -42,8 +41,8 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun renderState(state: State) {
-        Log.d("azaza", state.toString())
         binding!!.seekBar.isEnabled = !state.isStarted
+        binding!!.seekBar.progress = state.progress
         binding!!.timer.text = state.progress.toString()
         binding!!.startStop.text = if (state.isStarted) "Stop" else "Start"
     }

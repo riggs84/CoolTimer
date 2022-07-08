@@ -29,12 +29,11 @@ class StateViewModel : ViewModel() {
         val oldState = stateLiveData.value
         timer = object : CountDownTimer(stateLiveData.value!!.progress * 1000L, 1000) {
             override fun onTick(p0: Long) {
-                Log.d("azaza", "tick: ${stateLiveData.value!!.progress * 1000L}")
-                stateLiveData.value = oldState!!.copy(secondsRemains = (p0 / 60 / 1000).toInt(), isStarted = true)
+                stateLiveData.value = oldState!!.copy(progress = (p0 / 1000).toInt() - 1, isStarted = true)
             }
 
             override fun onFinish() {
-                stateLiveData.value = oldState!!.copy(isFinished = true, secondsRemains = 0, progress = 0)
+                stateLiveData.value = oldState!!.copy(isFinished = true, progress = 0)
             }
         }
         timer.start()
@@ -45,7 +44,6 @@ class StateViewModel : ViewModel() {
         timer.cancel()
         stateLiveData.value = oldState!!.copy(isStarted = false,
                                               isFinished = false,
-                                              secondsRemains = 0,
                                               progress = 0)
     }
 }
@@ -53,6 +51,4 @@ class StateViewModel : ViewModel() {
 data class State(
         var isStarted: Boolean = false,
         var progress: Int = 0,
-        var secondsRemains: Int = 0,
-        var isFinished: Boolean = false,
-                );
+        var isFinished: Boolean = false)
