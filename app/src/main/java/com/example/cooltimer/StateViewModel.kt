@@ -1,7 +1,6 @@
 package com.example.cooltimer
 
 import android.os.CountDownTimer
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -29,7 +28,7 @@ class StateViewModel : ViewModel() {
         val oldState = stateLiveData.value
         timer = object : CountDownTimer(stateLiveData.value!!.progress * 1000L, 1000) {
             override fun onTick(p0: Long) {
-                stateLiveData.value = oldState!!.copy(progress = (p0 / 1000).toInt() - 1, isStarted = true)
+                stateLiveData.value = oldState!!.copy(progress = (p0 / 1000).toInt(), isStarted = true)
             }
 
             override fun onFinish() {
