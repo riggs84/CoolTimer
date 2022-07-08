@@ -49,7 +49,7 @@ class MainActivity : AppCompatActivity() {
         if (state.isFinished) playAlarm()
     }
 
-    fun playAlarm(): Unit {
+    private fun playAlarm(): Unit {
         MediaPlayer.create(applicationContext, R.raw.bell_sound).start();
     }
 }
