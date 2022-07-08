@@ -20,11 +20,11 @@ class StateViewModel : ViewModel() {
         stateLiveData.value = oldState!!.copy(progress = progressValue)
     }
 
-    fun isStarted(): Boolean {
+    fun isCountStarted(): Boolean {
         return stateLiveData.value!!.isStarted
     }
 
-    fun start(): Unit {
+    fun startCount(): Unit {
         val oldState = stateLiveData.value
         timer = object : CountDownTimer(stateLiveData.value!!.progress * 1000L, 1000) {
             override fun onTick(p0: Long) {
@@ -38,7 +38,7 @@ class StateViewModel : ViewModel() {
         timer.start()
     }
 
-    fun stop(): Unit {
+    fun stopCount(): Unit {
         val oldState = stateLiveData.value
         timer.cancel()
         stateLiveData.value = oldState!!.copy(isStarted = false,
