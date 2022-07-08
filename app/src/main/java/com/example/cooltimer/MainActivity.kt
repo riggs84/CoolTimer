@@ -1,5 +1,6 @@
 package com.example.cooltimer
 
+import android.media.MediaPlayer
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.SeekBar.OnSeekBarChangeListener
@@ -45,5 +46,10 @@ class MainActivity : AppCompatActivity() {
         binding!!.seekBar.progress = state.progress
         binding!!.timer.text = state.progress.toString()
         binding!!.startStop.text = if (state.isStarted) "Stop" else "Start"
+        if (state.isFinished) playAlarm()
+    }
+
+    fun playAlarm(): Unit {
+        MediaPlayer.create(applicationContext, R.raw.bell_sound).start();
     }
 }
