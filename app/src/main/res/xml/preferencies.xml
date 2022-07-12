@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <CheckBoxPreference
+        android:title="Enable sound"
+        android:defaultValue="true"
+        android:summaryOff="sound disabled"
+        android:summaryOn="sound enabled"
+        android:key="enable_sound_pref" />
+
+    <EditTextPreference
+        android:title="Set maximum interval"
+        android:defaultValue="900"
+        android:key="max_interval_pref" />
+
+</PreferenceScreen>
