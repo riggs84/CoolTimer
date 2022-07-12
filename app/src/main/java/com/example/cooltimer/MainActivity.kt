@@ -17,13 +17,9 @@ import com.example.cooltimer.databinding.ActivityMainBinding
 class MainActivity : AppCompatActivity(), SharedPreferences.OnSharedPreferenceChangeListener {
 
     private val stateViewModel by viewModels<StateViewModel>()
-    private val MAX_INTERVAL = "max_interval_pref"
-    private val ENABLE_SOUND = "enable_sound_pref"
-
     private var isSoundEnabled = true
     private lateinit var sharedPreferences: SharedPreferences
     private lateinit var binding: ActivityMainBinding
-
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -36,7 +32,7 @@ class MainActivity : AppCompatActivity(), SharedPreferences.OnSharedPreferenceCh
             stateViewModel.initState(State(false, 0, false))
         }
 
-        updateValuesFromPreferences()
+        updateMaxLimit()
         binding.seekBar.setOnSeekBarChangeListener(object : OnSeekBarChangeListener {
             override fun onProgressChanged(seekBar: SeekBar, i: Int, b: Boolean) {
                 stateViewModel.setProgress(i)
@@ -69,7 +65,7 @@ class MainActivity : AppCompatActivity(), SharedPreferences.OnSharedPreferenceCh
         }
     }
 
-    private fun updateValuesFromPreferences() {
+    private fun updateMaxLimit() {
         binding.seekBar.max = sharedPreferences.getString(MAX_INTERVAL, "0")!!.toInt()
     }
 
@@ -79,8 +75,8 @@ class MainActivity : AppCompatActivity(), SharedPreferences.OnSharedPreferenceCh
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        val openAbout: Intent = Intent(this, AboutActivity::class.java)
-        val openSettings: Intent = Intent(this, SettingsActivity::class.java)
+        val openAbout = Intent(this, AboutActivity::class.java)
+        val openSettings = Intent(this, SettingsActivity::class.java)
 
         when(item.itemId) {
             R.id.menu_about -> { startActivity(openAbout); return true }
@@ -90,9 +86,9 @@ class MainActivity : AppCompatActivity(), SharedPreferences.OnSharedPreferenceCh
         return false
     }
 
-    override fun onSharedPreferenceChanged(p0: SharedPreferences?, p1: String?) {
-        when(p1) {
-            MAX_INTERVAL -> updateValuesFromPreferences()
+    override fun onSharedPreferenceChanged(sharedPreference: SharedPreferences?, preferenceKey: String?) {
+        when(preferenceKey) {
+            MAX_INTERVAL -> updateMaxLimit()
             ENABLE_SOUND -> isSoundEnabled = !isSoundEnabled
         }
     }
@@ -100,5 +96,10 @@ class MainActivity : AppCompatActivity(), SharedPreferences.OnSharedPreferenceCh
     override fun onDestroy() {
         sharedPreferences.unregisterOnSharedPreferenceChangeListener(this)
         super.onDestroy()
+    }
+
+    companion object {
+        const val MAX_INTERVAL = "max_interval_pref"
+        const val ENABLE_SOUND = "enable_sound_pref"
     }
 }
